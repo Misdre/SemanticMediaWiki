@@ -3,6 +3,7 @@
 namespace SMW\MediaWiki\Hooks;
 
 use Parser;
+use ParserOptions;
 use RuntimeException;
 use SMW\ApplicationFactory;
 use SMW\NamespaceManager;
@@ -477,7 +478,11 @@ class HookRegistry {
 		 * @see https://www.mediawiki.org/wiki/Manual:Hooks/InfoAction
 		 */
 		$functionHookDefinition['InfoAction'] = function ( $context, &$pageInfo ) {
-			$infoAction = new InfoAction( $context, $pageInfo );
+			$infoAction = new InfoAction(
+				$context->getOutput(),
+				$context->getWikiPage()->getParserOutput( new ParserOptions( $context->getUser() ) ),
+				$pageInfo
+			);
 			return $infoAction->process();
 		};
 
