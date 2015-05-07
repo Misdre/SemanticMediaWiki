@@ -105,11 +105,17 @@ class Factbox {
 	 *
 	 * @since 1.9
 	 *
+	 * @param string
+	 *
 	 * @return Factbox
 	 */
-	public function doBuild() {
+	public function doBuild( $action ) {
 
-		$this->content = $this->fetchContent( $this->getMagicWords() );
+		if ( $action === 'info' ) {
+			$this->content = $this->fetchContent( SMW_FACTBOX_SHOWN );
+		} else {
+			$this->content = $this->fetchContent( $this->getMagicWords() );
+		}
 
 		if ( $this->content !== '' ) {
 			$this->parserData->getOutput()->addModules( $this->getModules() );

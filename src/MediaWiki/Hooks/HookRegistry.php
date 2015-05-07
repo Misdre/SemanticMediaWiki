@@ -473,6 +473,14 @@ class HookRegistry {
 			return $editPageForm->process();
 		};
 
+		/**
+		 * @see https://www.mediawiki.org/wiki/Manual:Hooks/InfoAction
+		 */
+		$functionHookDefinition['InfoAction'] = function ( $context, &$pageInfo ) {
+			$infoAction = new InfoAction( $context, $pageInfo );
+			return $infoAction->process();
+		};
+
 		return $functionHookDefinition;
 	}
 
