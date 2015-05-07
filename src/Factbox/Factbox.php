@@ -74,6 +74,11 @@ class Factbox {
 	private $useInPreview = false;
 
 	/**
+	 * @var boolean
+	 */
+	private $useInActionInfo = false;
+
+	/**
 	 * @since 1.9
 	 *
 	 * @param Store $store
@@ -100,22 +105,27 @@ class Factbox {
 	}
 
 	/**
+	 * @note contains information about action=info
+	 *
+	 * @since 2.3
+	 *
+	 * @param boolean
+	 */
+	public function useInActionInfo( $actionInfo ) {
+		$this->useInActionInfo = $actionInfo;
+	}
+
+	/**
 	 * Builds content suitable for rendering a Factbox and
 	 * updating the ParserOuput accordingly
 	 *
 	 * @since 1.9
 	 *
-	 * @param string
-	 *
 	 * @return Factbox
 	 */
-	public function doBuild( $action ) {
+	public function doBuild() {
 
-		if ( $action === 'info' ) {
-			$this->content = $this->fetchContent( SMW_FACTBOX_SHOWN );
-		} else {
-			$this->content = $this->fetchContent( $this->getMagicWords() );
-		}
+		$this->content = $this->fetchContent( $this->getMagicWords() );
 
 		if ( $this->content !== '' ) {
 			$this->parserData->getOutput()->addModules( $this->getModules() );
@@ -187,6 +197,8 @@ class Factbox {
 			$showfactbox = SMW_FACTBOX_HIDDEN;
 		} elseif ( $this->useInPreview ) {
 			$showfactbox = $settings->get( 'smwgShowFactboxEdit' );
+		} elseif ( $this->useInActionInfo ) {
+			$showfactbox = SMW_FACTBOX_NONEMPTY;
 		} else {
 			$showfactbox = $settings->get( 'smwgShowFactbox' );
 		}
