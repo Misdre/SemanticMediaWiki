@@ -2,9 +2,7 @@
 
 namespace SMW\MediaWiki\Hooks;
 
-use IContextSource;
 use OutputPage;
-use ParserOptions;
 use ParserOutput;
 use SMW\ApplicationFactory;
 use SMW\MediaWiki\MessageBuilder;
@@ -18,26 +16,33 @@ use Title;
  * @license GNU GPL v2+
  * @since 2.3
  *
- * @author ?
+ * @author misdre
  */
 class InfoAction {
 
 	/**
-	 * @var string
+	 * @var array
 	 */
 	protected $pageInfo = null;
 
 	/**
-	 * @var IContextSource
+	 * @var OutputPage
 	 */
-	protected $context = null;
+	protected $outputPage = null;
 
 	/**
-	 * @param array $pageInfo
-	 * @param IContextSource $context
+	 * @var ParserOutput
 	 */
-	public function __construct( IContextSource $context, &$pageInfo ) {
-		$this->context = $context;
+	protected $parserOutput = null;
+
+	/**
+	 * @param OutputPage $outputPage
+	 * @param ParserOutput $parserOutput
+	 * @param array $pageInfo
+	 */
+	public function __construct( OutputPage $outputPage, ParserOutput $parserOutput, &$pageInfo ) {
+		$this->outputPage = $outputPage;
+		$this->parserOutput = $parserOutput;
 		$this->pageInfo =& $pageInfo;
 	}
 
@@ -50,7 +55,7 @@ class InfoAction {
 
 	private function canPerformUpdate() {
 
-		$title = $this->context->getOutput()->getTitle();
+		$title = $this->outputPage->getTitle();
 
 		if ( $title->isSpecialPage() ||
 			$title->isRedirect() ||
@@ -65,8 +70,8 @@ class InfoAction {
 		$cachedFactbox = ApplicationFactory::getInstance()->newFactboxFactory()->newCachedFactbox();
 
 		$cachedFactbox->prepareFactboxContent(
-			$this->context->getOutput(),
-			$this->context->getWikiPage()->getParserOutput( new ParserOptions( $this->context->getUser() ) )
+			$this->outputPage,
+			$this->parserOutput
 		);
 
 		return true;
