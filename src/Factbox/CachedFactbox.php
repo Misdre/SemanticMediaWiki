@@ -204,8 +204,9 @@ class CachedFactbox {
 		);
 
 		$factbox->useInPreview( $requestContext->getRequest()->getCheck( 'wpPreview' ) );
+		$factbox->useInActionInfo( $requestContext->getRequest()->getVal( 'action' ) === 'info' );
 
-		if ( $factbox->doBuild( $requestContext->getRequest()->getVal( 'action' ) )->isVisible() ) {
+		if ( $factbox->doBuild()->isVisible() ) {
 
 			$contentParser = $applicationFactory->newContentParser( $title );
 			$contentParser->parse( $factbox->getContent() );
